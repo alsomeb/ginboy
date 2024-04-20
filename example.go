@@ -11,7 +11,7 @@ import (
 // https://gin-gonic.com/docs/examples/upload-file/single-file/
 
 const MaxMultipartMem = 8 * 1024 * 1024 // 8 MiB
-//const MaxMultipartMem = 1 * 1024 // testing a low size to give err
+// const MaxMultipartMem = 1 * 1024 // testing a low size to give err
 const FileDir = "photos"
 
 func main() {
