@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
+	"github.com/google/uuid"
 	"mime/multipart"
 	"net/http"
 	"path/filepath"
@@ -13,12 +13,12 @@ import (
 // https://gin-gonic.com/docs/examples/upload-file/single-file/
 
 const MaxMultipartMem = 8 * 1024 * 1024 // 8 MiB
-// const MaxMultipartMem = 1 * 1024 // testing a low size to give err
 const FileDir = "photos"
 
 func main() {
 	router := gin.Default()
 	router.MaxMultipartMemory = MaxMultipartMem
+	router.Static("/photos", FileDir) // This code makes any file in the photos directory accessible via a URL like http://localhost:8080/photos/filename.jpg/png
 	router.POST("/upload", fileUpload)
 	_ = router.Run(":8080")
 }
@@ -57,6 +57,7 @@ func processFileUpload(c *gin.Context) (*multipart.FileHeader, error) {
 		return nil, fmt.Errorf("the file size exceeds the maximum limit of 8 MB")
 	}
 
+	file.Filename = generateFileName(file.Filename)
 	// Upload the file to specific dst, if same filename exists it will replace it
 	err = c.SaveUploadedFile(file, FileDir+"/"+file.Filename)
 	if err != nil {
@@ -68,11 +69,15 @@ func processFileUpload(c *gin.Context) (*multipart.FileHeader, error) {
 
 func isAllowedExt(filename string) bool {
 	fileExt := filepath.Ext(strings.ToLower(filename))
-	log.Println("file ext:", fileExt)
 	switch fileExt {
 	case ".jpg", ".jpeg", ".png":
 		return true
 	default:
 		return false
 	}
+}
+
+func generateFileName(filename string) string {
+	fileExt := filepath.Ext(strings.ToLower(filename))
+	return uuid.NewString() + fileExt
 }
