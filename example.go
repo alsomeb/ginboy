@@ -11,6 +11,7 @@ import (
 )
 
 // https://gin-gonic.com/docs/examples/upload-file/single-file/
+// Todo make a struct that holds src-path and maybe save in a db
 
 const MaxMultipartMem = 8 * 1024 * 1024 // 8 MiB
 const FileDir = "photos"
