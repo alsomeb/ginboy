@@ -26,6 +26,7 @@ func main() {
 func fileUpload(c *gin.Context) {
 	file, err := processFileUpload(c)
 
+	// dynamic err msg depending on file processing err
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
