@@ -43,7 +43,6 @@ func processFileUpload(c *gin.Context) (*multipart.FileHeader, error) {
 	}
 
 	file.Filename = utils.GenerateFileName(file.Filename)
-	// Upload the file to specific dst, if same filename exists it will replace it
 	err = c.SaveUploadedFile(file, utils.FileDir+"/"+file.Filename)
 	if err != nil {
 		return nil, fmt.Errorf("processing file err: %w", err)
