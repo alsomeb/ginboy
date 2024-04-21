@@ -1,30 +1,14 @@
-package main
+package data
 
 import (
 	"fmt"
+	"ginboy/util"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"mime/multipart"
 	"net/http"
-	"path/filepath"
-	"strings"
 )
 
-// https://gin-gonic.com/docs/examples/upload-file/single-file/
-// Todo make a struct that holds src-path and maybe save in a db
-
-const MaxMultipartMem = 8 * 1024 * 1024 // 8 MiB
-const FileDir = "photos"
-
-func main() {
-	router := gin.Default()
-	router.MaxMultipartMemory = MaxMultipartMem
-	router.Static("/photos", FileDir) // This code makes any file in the photos directory accessible via a URL like http://localhost:8080/photos/filename.jpg/png
-	router.POST("/upload", fileUpload)
-	_ = router.Run(":8080")
-}
-
-func fileUpload(c *gin.Context) {
+func FileUpload(c *gin.Context) {
 	file, err := processFileUpload(c)
 
 	// dynamic err msg depending on file processing err
@@ -49,36 +33,21 @@ func processFileUpload(c *gin.Context) (*multipart.FileHeader, error) {
 		return nil, fmt.Errorf("no file provided")
 	}
 
-	if !isAllowedExt(file.Filename) {
+	if !util.IsAllowedExt(file.Filename) {
 		return nil, fmt.Errorf("only Jpg, Jpeg and png allowed")
 	}
 
 	// Check if the file size exceeds the maximum allowed size
-	if file.Size > MaxMultipartMem {
+	if file.Size > util.MaxMultipartMem {
 		return nil, fmt.Errorf("the file size exceeds the maximum limit of 8 MB")
 	}
 
-	file.Filename = generateFileName(file.Filename)
+	file.Filename = util.GenerateFileName(file.Filename)
 	// Upload the file to specific dst, if same filename exists it will replace it
-	err = c.SaveUploadedFile(file, FileDir+"/"+file.Filename)
+	err = c.SaveUploadedFile(file, util.FileDir+"/"+file.Filename)
 	if err != nil {
 		return nil, fmt.Errorf("processing file err: %w", err)
 	}
 
 	return file, nil
-}
-
-func isAllowedExt(filename string) bool {
-	fileExt := filepath.Ext(strings.ToLower(filename))
-	switch fileExt {
-	case ".jpg", ".jpeg", ".png":
-		return true
-	default:
-		return false
-	}
-}
-
-func generateFileName(filename string) string {
-	fileExt := filepath.Ext(strings.ToLower(filename))
-	return uuid.NewString() + fileExt
 }
