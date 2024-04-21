@@ -2,7 +2,7 @@ package data
 
 import (
 	"fmt"
-	"ginboy/util"
+	"ginboy/utils"
 	"github.com/gin-gonic/gin"
 	"mime/multipart"
 	"net/http"
@@ -33,18 +33,18 @@ func processFileUpload(c *gin.Context) (*multipart.FileHeader, error) {
 		return nil, fmt.Errorf("no file provided")
 	}
 
-	if !util.IsAllowedExt(file.Filename) {
+	if !utils.IsAllowedExt(file.Filename) {
 		return nil, fmt.Errorf("only Jpg, Jpeg and png allowed")
 	}
 
 	// Check if the file size exceeds the maximum allowed size
-	if file.Size > util.MaxMultipartMem {
+	if file.Size > utils.MaxMultipartMem {
 		return nil, fmt.Errorf("the file size exceeds the maximum limit of 8 MB")
 	}
 
-	file.Filename = util.GenerateFileName(file.Filename)
+	file.Filename = utils.GenerateFileName(file.Filename)
 	// Upload the file to specific dst, if same filename exists it will replace it
-	err = c.SaveUploadedFile(file, util.FileDir+"/"+file.Filename)
+	err = c.SaveUploadedFile(file, utils.FileDir+"/"+file.Filename)
 	if err != nil {
 		return nil, fmt.Errorf("processing file err: %w", err)
 	}
