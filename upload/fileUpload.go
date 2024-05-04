@@ -20,7 +20,7 @@ func FileUpload(c *gin.Context, mongoClient *database.MongoClient) {
 		return
 	}
 
-	// Check for file input in the form, 'files' since it will accept an input with potential multiple
+	// Check for file input in the form, 'files' since it will accept an input with potential multiple files
 	files, found := form.File["files"]
 	if !found {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": "no files found"})
@@ -44,7 +44,7 @@ func FileUpload(c *gin.Context, mongoClient *database.MongoClient) {
 	})
 }
 
-// processes file saving or error a specific msg that we can send in the c.JSON()
+// processes file & saving it to a folder or returns dynamic error msg that we can send in the c.JSON()
 func processAndSaveFile(c *gin.Context, file *multipart.FileHeader) error {
 	if !utils.IsAllowedExt(file.Filename) {
 		return fmt.Errorf("only Jpg, Jpeg and png allowed")
