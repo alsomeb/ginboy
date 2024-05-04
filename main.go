@@ -15,6 +15,5 @@ func main() {
 	err := router.Run(":8080")
 	if err != nil {
 		log.Fatal("Error starting server:", err)
-		return
 	}
 }
