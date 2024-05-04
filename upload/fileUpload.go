@@ -2,6 +2,7 @@ package upload
 
 import (
 	"fmt"
+	"ginboy/database"
 	"ginboy/utils"
 	"github.com/gin-gonic/gin"
 	"mime/multipart"
@@ -11,7 +12,7 @@ import (
 // https://gin-gonic.com/docs/examples/upload-file/single-file/
 // https://gin-gonic.com/docs/examples/upload-file/multiple-file/
 
-func FileUpload(c *gin.Context) {
+func FileUpload(c *gin.Context, mongoClient *database.MongoClient) {
 	// Parse multipart form
 	form, err := c.MultipartForm()
 	if err != nil {

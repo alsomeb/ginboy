@@ -2,6 +2,9 @@ package utils
 
 import (
 	"github.com/google/uuid"
+	"github.com/joho/godotenv"
+	"log"
+	"os"
 	"path/filepath"
 	"strings"
 )
@@ -22,4 +25,15 @@ func IsAllowedExt(filename string) bool {
 func GenerateFileName(filename string) string {
 	fileExt := filepath.Ext(strings.ToLower(filename))
 	return uuid.NewString() + fileExt
+}
+
+// LoadEnvVariable Loads current env file and returns requested value by key
+func LoadEnvVariable(key string) string {
+	err := godotenv.Load(".env") // Load will read your env file(s) and load them into ENV for this process.
+
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return os.Getenv(key)
 }
