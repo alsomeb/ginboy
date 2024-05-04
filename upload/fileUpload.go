@@ -8,6 +8,9 @@ import (
 	"net/http"
 )
 
+// https://gin-gonic.com/docs/examples/upload-file/single-file/
+// https://gin-gonic.com/docs/examples/upload-file/multiple-file/
+
 func FileUpload(c *gin.Context) {
 	// Parse multipart form
 	form, err := c.MultipartForm()

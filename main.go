@@ -7,9 +7,6 @@ import (
 	"log"
 )
 
-// https://gin-gonic.com/docs/examples/upload-file/single-file/
-// https://gin-gonic.com/docs/examples/upload-file/multiple-file/
-
 func main() {
 	router := gin.Default()
 	router.MaxMultipartMemory = utils.MaxMultipartMem
