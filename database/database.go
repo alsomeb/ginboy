@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"ginboy/utils"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -16,13 +15,10 @@ type MongoClient struct {
 }
 
 func InitClient() *MongoClient {
-	username := utils.LoadEnvVariable("DB_USER")
-	password := utils.LoadEnvVariable("DB_PASSWORD")
-	mongoURI := fmt.Sprintf("mongodb+srv://%v:%v@alsomeb.jcl49rx.mongodb.net/Files?retryWrites=true&w=majority", username, password)
+	mongoURI := utils.LoadEnvVariable("MONGO_URI")
 	log.Println("---- Successfully Loaded .env file with DB Details ----")
 
 	client := connectMongo(mongoURI)
-
 	return client
 }
 
