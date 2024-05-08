@@ -36,9 +36,8 @@ func connectMongo(mongoURI string) *MongoClient {
 		log.Fatalf("failed to connect to MongoDB: %v", err)
 	}
 
-	err = client.Ping(context.TODO(), nil)
-
-	if err != nil {
+	// reusing the err variable, which was previously used in the mongo.Connect call, and assigning it a new value based on the result of client.Ping.
+	if err = client.Ping(context.TODO(), nil); err != nil {
 		log.Fatalf("failed to ping MongoDB: %v", err)
 	}
 
