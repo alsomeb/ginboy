@@ -29,9 +29,9 @@ func FileUpload(c *gin.Context, mongoClient *database.MongoClient) {
 
 	// Process each file
 	for _, file := range files {
-		processErr := processAndSaveFile(c, file)
-		// dynamic err msg depending on file processing err
-		if processErr != nil {
+		// Here, the 'processErr' variable is declared and checked inline within the if condition.
+		// This approach scopes the 'processErr' variable to the if block only, meaning it is not accessible outside of it
+		if processErr := processAndSaveFile(c, file); processErr != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": processErr.Error()})
 			return
 		}
@@ -56,8 +56,7 @@ func processAndSaveFile(c *gin.Context, file *multipart.FileHeader) error {
 	}
 
 	file.Filename = utils.GenerateFileName(file.Filename)
-	err := c.SaveUploadedFile(file, utils.FileDir+"/"+file.Filename)
-	if err != nil {
+	if err := c.SaveUploadedFile(file, utils.FileDir+"/"+file.Filename); err != nil {
 		return fmt.Errorf("processing file err: %w", err)
 	}
 
